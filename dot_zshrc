@@ -3,44 +3,42 @@
 # Managed by chezmoi | Theme: Catppuccin Mocha | Prompt: Starship
 # ============================================================================
 
-# --- Homebrew ---
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# --- Lazy completion system (defers compinit until first tab press) ---
+# --- Lazy completion system (must be before cache which calls compdef) ---
 autoload -Uz compinit
-
-# Queue compdef calls until compinit actually runs
 typeset -a _deferred_compdefs
 compdef() { _deferred_compdefs+=("$*") }
-
 _lazy_compinit() {
   unfunction _lazy_compinit
   compinit -C
-  # Replay queued compdef calls
-  for def in "${_deferred_compdefs[@]}"; do
-    eval "compdef $def"
-  done
+  for def in "${_deferred_compdefs[@]}"; do eval "compdef $def"; done
   unset _deferred_compdefs
   zle -N complete-word
   zle complete-word
 }
 zle -N complete-word _lazy_compinit
 
-# --- fnm (Node version manager) ---
-eval "$(fnm env --use-on-cd --shell zsh)"
-
-# --- uv (Python package manager) completions ---
-eval "$(uv generate-shell-completion zsh)"
-eval "$(uvx --generate-shell-completion zsh)"
-
-# --- Starship prompt ---
-eval "$(starship init zsh)"
-
-# --- zoxide (smarter cd) ---
-eval "$(zoxide init zsh)"
-
-# --- fzf (fuzzy finder) ---
-source <(fzf --zsh)
+# --- Cached tool initialization (regenerate: rm ~/.zsh_cache && exec zsh) ---
+if [[ -f ~/.zsh_cache ]]; then
+  source ~/.zsh_cache
+else
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  {
+    echo 'export HOMEBREW_PREFIX="/opt/homebrew"'
+    echo 'export HOMEBREW_CELLAR="/opt/homebrew/Cellar"'
+    echo 'export HOMEBREW_REPOSITORY="/opt/homebrew"'
+    echo 'fpath[1,0]="/opt/homebrew/share/zsh/site-functions"'
+    echo 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"'
+    echo '[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"'
+    echo 'export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"'
+    fnm env --use-on-cd --shell zsh
+    uv generate-shell-completion zsh
+    uvx --generate-shell-completion zsh
+    starship init zsh
+    zoxide init zsh
+    fzf --zsh
+  } > ~/.zsh_cache
+  source ~/.zsh_cache
+fi
 
 # --- Plugins ---
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
