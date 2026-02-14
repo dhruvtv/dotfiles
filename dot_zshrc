@@ -9,8 +9,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # --- Completion system (must come before anything that calls compdef) ---
 autoload -Uz compinit && compinit
 
-# --- mise (version manager for Node, Go, etc.) ---
-eval "$(mise activate zsh)"
+# --- fnm (Node version manager) ---
+eval "$(fnm env --use-on-cd --shell zsh)"
 
 # --- uv (Python package manager) completions ---
 eval "$(uv generate-shell-completion zsh)"
