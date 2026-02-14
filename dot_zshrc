@@ -6,8 +6,25 @@
 # --- Homebrew ---
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# --- Completion system (skip security audit — personal machine) ---
-autoload -Uz compinit && compinit -C
+# --- Lazy completion system (defers compinit until first tab press) ---
+autoload -Uz compinit
+
+# Queue compdef calls until compinit actually runs
+typeset -a _deferred_compdefs
+compdef() { _deferred_compdefs+=("$*") }
+
+_lazy_compinit() {
+  unfunction _lazy_compinit
+  compinit -C
+  # Replay queued compdef calls
+  for def in "${_deferred_compdefs[@]}"; do
+    eval "compdef $def"
+  done
+  unset _deferred_compdefs
+  zle -N complete-word
+  zle complete-word
+}
+zle -N complete-word _lazy_compinit
 
 # --- fnm (Node version manager) ---
 eval "$(fnm env --use-on-cd --shell zsh)"
