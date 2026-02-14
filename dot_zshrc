@@ -12,9 +12,10 @@ _lazy_compinit() {
   compinit -C
   for def in "${_deferred_compdefs[@]}"; do eval "compdef $def"; done
   unset _deferred_compdefs
-  # Load uv/uvx completions only now, when tab is first pressed
+  # Load heavy completions only on first tab press
   eval "$(uv generate-shell-completion zsh)"
   eval "$(uvx --generate-shell-completion zsh)"
+  [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
   zle -N complete-word
   zle complete-word
 }
@@ -90,7 +91,6 @@ alias pip="uv pip"
 # --- Bun ---
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # --- Go ---
 export GOPATH="$HOME/go"
