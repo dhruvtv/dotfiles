@@ -34,7 +34,7 @@ brew upgrade      # Update tools + Go
 
 ## Shell
 
-**zsh + [Starship](https://starship.rs/)** prompt with one plugin: syntax highlighting. No framework (no Oh-My-Zsh, no Prezto). Starship is written in Rust, works across shells, and is actively maintained.
+**zsh + [Starship](https://starship.rs/)** prompt with two plugins: autosuggestions and syntax highlighting. No framework (no Oh-My-Zsh, no Prezto). Starship is written in Rust, works across shells, and is actively maintained.
 
 The prompt shows your current directory, git branch/status, active language versions, and command duration — all in Catppuccin Mocha colors with Nerd Font icons.
 
@@ -232,7 +232,7 @@ The full list of packages is in [`.Brewfile`](dot_Brewfile), but the highlights:
 
 - **Dev tools:** uv, ruff, fnm, golangci-lint, gh (GitHub CLI), docker
 - **CLI upgrades:** eza, bat, fd, ripgrep, zoxide, fzf, lazygit, delta, just, yq, tldr
-- **Shell:** starship, zsh-syntax-highlighting
+- **Shell:** starship, zsh-autosuggestions, zsh-syntax-highlighting
 - **Media:** ffmpeg, yt-dlp, tesseract (OCR)
 - **Runtimes:** node, go, python, bun, deno
 
