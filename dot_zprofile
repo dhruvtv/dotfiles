@@ -1,0 +1,4 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Created by `pipx` on 2025-05-27 19:48:22
+export PATH="$PATH:/Users/dhruvtv/Library/Python/3.9/bin"
