@@ -1,0 +1,15 @@
+#!/bin/zsh
+# Regenerates ~/.zsh_cache — called automatically when stale
+{
+  echo 'export HOMEBREW_PREFIX="/opt/homebrew"'
+  echo 'export HOMEBREW_CELLAR="/opt/homebrew/Cellar"'
+  echo 'export HOMEBREW_REPOSITORY="/opt/homebrew"'
+  echo 'fpath[1,0]="/opt/homebrew/share/zsh/site-functions"'
+  echo 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"'
+  echo '[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"'
+  echo 'export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"'
+  /opt/homebrew/bin/fnm env --use-on-cd --shell zsh
+  /opt/homebrew/bin/starship init zsh
+  /opt/homebrew/bin/zoxide init zsh
+  /opt/homebrew/bin/fzf --zsh
+} > ~/.zsh_cache

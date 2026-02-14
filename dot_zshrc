@@ -3,7 +3,7 @@
 # Managed by chezmoi | Theme: Catppuccin Mocha | Prompt: Starship
 # ============================================================================
 
-# --- Lazy completion system (must be before cache which calls compdef) ---
+# --- Lazy completion system ---
 autoload -Uz compinit
 typeset -a _deferred_compdefs
 compdef() { _deferred_compdefs+=("$*") }
@@ -12,7 +12,6 @@ _lazy_compinit() {
   compinit -C
   for def in "${_deferred_compdefs[@]}"; do eval "compdef $def"; done
   unset _deferred_compdefs
-  # Load heavy completions only on first tab press
   eval "$(uv generate-shell-completion zsh)"
   eval "$(uvx --generate-shell-completion zsh)"
   [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -21,34 +20,11 @@ _lazy_compinit() {
 }
 zle -N complete-word _lazy_compinit
 
-# --- Cached tool initialization ---
-# Auto-regenerates when Homebrew or fnm change
-_zsh_cache=~/.zsh_cache
-_cache_valid() {
-  [[ -f $_zsh_cache ]] && [[ $_zsh_cache -nt /opt/homebrew/bin ]] && [[ $_zsh_cache -nt ${HOME}/.fnm ]]
-}
-_gen_cache() {
-  {
-    echo 'export HOMEBREW_PREFIX="/opt/homebrew"'
-    echo 'export HOMEBREW_CELLAR="/opt/homebrew/Cellar"'
-    echo 'export HOMEBREW_REPOSITORY="/opt/homebrew"'
-    echo 'fpath[1,0]="/opt/homebrew/share/zsh/site-functions"'
-    echo 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"'
-    echo '[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"'
-    echo 'export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"'
-    /opt/homebrew/bin/fnm env --use-on-cd --shell zsh
-    /opt/homebrew/bin/starship init zsh
-    /opt/homebrew/bin/zoxide init zsh
-    /opt/homebrew/bin/fzf --zsh
-  } > $_zsh_cache
-}
-if ! _cache_valid; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-  _gen_cache
+# --- Cached tool initialization (auto-regenerates on brew/fnm changes) ---
+if [[ ! -f ~/.zsh_cache ]] || [[ /opt/homebrew/bin -nt ~/.zsh_cache ]] || [[ ~/.fnm -nt ~/.zsh_cache ]]; then
+  ~/.zsh_gen_cache
 fi
-source $_zsh_cache
-unfunction _cache_valid _gen_cache
-unset _zsh_cache
+source ~/.zsh_cache
 
 # --- Plugins ---
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
