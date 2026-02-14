@@ -17,11 +17,13 @@ _lazy_compinit() {
 }
 zle -N complete-word _lazy_compinit
 
-# --- Cached tool initialization (regenerate: rm ~/.zsh_cache && exec zsh) ---
-if [[ -f ~/.zsh_cache ]]; then
-  source ~/.zsh_cache
-else
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+# --- Cached tool initialization ---
+# Auto-regenerates when Homebrew or fnm change (brew install/upgrade, fnm install)
+_zsh_cache=~/.zsh_cache
+_cache_valid() {
+  [[ -f $_zsh_cache ]] && [[ $_zsh_cache -nt /opt/homebrew/bin ]] && [[ $_zsh_cache -nt ${HOME}/.fnm ]]
+}
+_gen_cache() {
   {
     echo 'export HOMEBREW_PREFIX="/opt/homebrew"'
     echo 'export HOMEBREW_CELLAR="/opt/homebrew/Cellar"'
@@ -30,15 +32,21 @@ else
     echo 'export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}"'
     echo '[ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"'
     echo 'export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"'
-    fnm env --use-on-cd --shell zsh
-    uv generate-shell-completion zsh
-    uvx --generate-shell-completion zsh
-    starship init zsh
-    zoxide init zsh
-    fzf --zsh
-  } > ~/.zsh_cache
-  source ~/.zsh_cache
+    /opt/homebrew/bin/fnm env --use-on-cd --shell zsh
+    /opt/homebrew/bin/uv generate-shell-completion zsh
+    /opt/homebrew/bin/uvx --generate-shell-completion zsh
+    /opt/homebrew/bin/starship init zsh
+    /opt/homebrew/bin/zoxide init zsh
+    /opt/homebrew/bin/fzf --zsh
+  } > $_zsh_cache
+}
+if ! _cache_valid; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  _gen_cache
 fi
+source $_zsh_cache
+unfunction _cache_valid _gen_cache
+unset _zsh_cache
 
 # --- Plugins ---
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
