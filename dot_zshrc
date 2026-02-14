@@ -6,8 +6,13 @@
 # --- Homebrew ---
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# --- Completion system (must come before anything that calls compdef) ---
-autoload -Uz compinit && compinit
+# --- Completion system (cached — only audits once per day) ---
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # --- fnm (Node version manager) ---
 eval "$(fnm env --use-on-cd --shell zsh)"
