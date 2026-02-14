@@ -70,6 +70,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # --- Go ---
 
+# --- Rust ---
+. "$HOME/.cargo/env"
+
 # --- Local binaries (claude, etc.) ---
 export PATH="$HOME/.local/bin:$PATH"
 export GOPATH="$HOME/go"
