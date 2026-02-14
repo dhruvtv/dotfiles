@@ -6,13 +6,8 @@
 # --- Homebrew ---
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# --- Completion system (cached — only audits once per day) ---
-autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+# --- Completion system (skip security audit — personal machine) ---
+autoload -Uz compinit && compinit -C
 
 # --- fnm (Node version manager) ---
 eval "$(fnm env --use-on-cd --shell zsh)"
