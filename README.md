@@ -17,7 +17,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install chezmoi
 chezmoi init --apply dhruvtv
 brew bundle --file=~/.Brewfile
-eval "$(mise activate bash)" && mise install
+fnm install 24 && fnm default 24
 ```
 
 Restart your terminal. Done.
@@ -27,7 +27,7 @@ Restart your terminal. Done.
 ```bash
 chezmoi update    # Pull latest dotfiles
 brew bundle       # Sync packages
-mise install      # Sync language versions
+brew upgrade      # Update tools + Go
 ```
 
 ---
@@ -88,12 +88,14 @@ Everything is configured in `pyproject.toml`. One file for dependencies, linting
 
 ## JavaScript / TypeScript
 
-**Node.js 24** (latest) managed by mise. **[Bun](https://bun.sh/)** for fast package installs and scripting.
+**Node.js 24** (latest) managed by [fnm](https://github.com/Schniz/fnm). **[Bun](https://bun.sh/)** for fast package installs and scripting.
 
 ```bash
-# Node version management (via mise)
-mise use node@22           # Switch to Node 22 in current project
-mise use --global node@24  # Set global default
+# Node version management
+fnm install 22          # Install Node 22
+fnm use 22              # Switch to it
+fnm default 24          # Set global default
+# Auto-switches when you cd into a dir with .node-version or .nvmrc
 
 # Package management — I use Bun for speed
 bun init                # New project
@@ -109,9 +111,9 @@ npx create-next-app@latest
 
 ## Go
 
-**Go 1.26** managed by mise with **[golangci-lint](https://golangci-lint.run/)** for linting.
+**Go** installed via Homebrew, updated with `brew upgrade`. No version manager needed — Go's `toolchain` directive in `go.mod` handles per-project versions automatically since Go 1.21.
 
-Go's built-in toolchain is already excellent — `go build`, `go test`, `go vet` do most of what you need. golangci-lint adds 100+ linters on top, running them in parallel with caching so it's fast on repeat runs.
+**[golangci-lint](https://golangci-lint.run/)** for linting. Runs 100+ linters in parallel with caching so it's fast on repeat runs.
 
 ```bash
 # Start a new module
@@ -141,24 +143,6 @@ I keep a `.golangci.yml` in each project to configure which linters to enable be
 
 **gopls** (the official language server) ships with the VS Code Go extension and handles completions, diagnostics, and refactoring.
 
-## Version Management
-
-**[mise](https://mise.jdx.dev/)** manages Node and Go versions. Python versions are handled by uv.
-
-```bash
-# Install and set versions globally
-mise use --global node@24 go@1.26
-
-# Per-project versions (creates .mise.toml)
-mise use node@22 go@1.25
-
-# List what's installed
-mise list
-
-# Install everything specified in .mise.toml
-mise install
-```
-
 ## Git
 
 **[delta](https://dandavber.github.io/delta/)** for syntax-highlighted, side-by-side diffs. It's configured as the default git pager so it just works — every `git diff`, `git log -p`, `git show` gets the treatment automatically.
@@ -187,7 +171,7 @@ Classic Unix tools replaced with faster, friendlier alternatives. All aliased so
 ls          # → eza (colors, git status, icons)
 ll          # → eza -la --git --icons (detailed listing)
 tree        # → eza --tree --icons
-cat         # → bat (syntax highlighting, line numbers)
+cat         # → bat (syntax highlighting only, clean for copy-paste)
 grep        # → ripgrep (faster, respects .gitignore)
 find        # → fd (simpler syntax, faster)
 diff        # → delta (syntax-highlighted diffs)
@@ -209,8 +193,8 @@ ctrl+t      # Fuzzy find files
 alt+c       # Fuzzy cd into subdirectories
 
 # bat — cat with syntax highlighting
-cat main.py               # Syntax-highlighted with line numbers
-cat README.md --plain      # Plain output (no line numbers)
+cat main.py               # Syntax-highlighted, no decorations
+bat main.py               # Full view with line numbers and border
 
 # fd — find files
 find "*.py"               # Find all Python files
@@ -246,7 +230,7 @@ git add -A && git commit -m "update" && git push
 
 The full list of packages is in [`.Brewfile`](dot_Brewfile), but the highlights:
 
-- **Dev tools:** uv, ruff, mise, golangci-lint, gh (GitHub CLI), docker
+- **Dev tools:** uv, ruff, fnm, golangci-lint, gh (GitHub CLI), docker
 - **CLI upgrades:** eza, bat, fd, ripgrep, zoxide, fzf, lazygit, delta, just, yq, tldr
 - **Shell:** starship, zsh-autosuggestions, zsh-syntax-highlighting
 - **Media:** ffmpeg, yt-dlp, tesseract (OCR)
@@ -260,7 +244,6 @@ The full list of packages is in [`.Brewfile`](dot_Brewfile), but the highlights:
 ~/.gitconfig                    Git config (delta, aliases, defaults)
 ~/.config/starship.toml         Starship prompt
 ~/.config/ghostty/config        Ghostty terminal
-~/.config/mise/config.toml      Language versions
 ~/.Brewfile                     Homebrew packages
 ```
 
