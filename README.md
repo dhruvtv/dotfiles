@@ -36,6 +36,8 @@ brew upgrade      # Update tools + Go
 
 **zsh + [Starship](https://starship.rs/)** prompt with two plugins: autosuggestions and syntax highlighting. No framework (no Oh-My-Zsh, no Prezto). Starship is written in Rust, works across shells, and is actively maintained.
 
+Completions load after the tool cache (which sets up Homebrew's fpath) so all Homebrew-installed completions are picked up.
+
 The prompt shows your current directory, git branch/status, active language versions, and command duration — all in Catppuccin Mocha colors with Nerd Font icons.
 
 ## Theme

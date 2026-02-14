@@ -3,28 +3,14 @@
 # Managed by chezmoi | Theme: Catppuccin Mocha | Prompt: Starship
 # ============================================================================
 
-# --- Lazy completion system ---
-autoload -Uz compinit
-typeset -a _deferred_compdefs
-compdef() { _deferred_compdefs+=("$*") }
-_lazy_compinit() {
-  unfunction _lazy_compinit
-  compinit -C
-  for def in "${_deferred_compdefs[@]}"; do eval "compdef $def"; done
-  unset _deferred_compdefs
-  eval "$(uv generate-shell-completion zsh)"
-  eval "$(uvx --generate-shell-completion zsh)"
-  [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-  zle -N complete-word
-  zle complete-word
-}
-zle -N complete-word _lazy_compinit
-
 # --- Cached tool initialization (auto-regenerates on brew/fnm changes) ---
 if [[ ! -f ~/.zsh_cache ]] || [[ /opt/homebrew/bin -nt ~/.zsh_cache ]] || [[ ~/.fnm -nt ~/.zsh_cache ]]; then
   ~/.zsh_gen_cache
 fi
 source ~/.zsh_cache
+
+# --- Completion (after cache so homebrew site-functions is in fpath) ---
+autoload -Uz compinit && compinit
 
 # --- Plugins ---
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
