@@ -1,10 +1,13 @@
 # ============================================================================
-# .zshrc — SOTA 2026 Dev Environment
+# .zshrc — Dev Environment
 # Managed by chezmoi | Theme: Catppuccin Mocha | Prompt: Starship
 # ============================================================================
 
 # --- Homebrew ---
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# --- Completion system (must come before anything that calls compdef) ---
+autoload -Uz compinit && compinit
 
 # --- mise (version manager for Node, Go, etc.) ---
 eval "$(mise activate zsh)"
