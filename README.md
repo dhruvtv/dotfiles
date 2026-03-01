@@ -36,13 +36,13 @@ brew upgrade      # Update tools + Go
 
 **zsh + [Starship](https://starship.rs/)** prompt with two plugins: autosuggestions and syntax highlighting. No framework (no Oh-My-Zsh, no Prezto). Starship is written in Rust, works across shells, and is actively maintained.
 
-Completions load after the tool cache (which sets up Homebrew's fpath) so all Homebrew-installed completions are picked up.
+Completions are lazy-loaded on first Tab press to keep shell init under 40ms. Both `expand-or-complete` and `complete-word` widgets are hooked so that fzf's Tab fallback triggers the lazy init correctly.
 
 The prompt shows your current directory, git branch/status, active language versions, and command duration — all in Catppuccin Mocha colors with Nerd Font icons.
 
 ## Theme
 
-**[Catppuccin Mocha](https://catppuccin.com/)** everywhere. Terminal, prompt, git diffs, editor — all matching. It's a pastel palette that doesn't burn your eyes at 2am. I picked it because it has ports for literally everything, so consistency is easy.
+**[Catppuccin Mocha](https://catppuccin.com/)** for dark mode, **[Gruvbox Light](https://github.com/morhetz/gruvbox)** for light mode. Ghostty switches automatically based on macOS appearance. Prompt, git diffs, and editor follow the dark theme — Catppuccin has ports for literally everything, so consistency is easy.
 
 **Font:** JetBrains Mono Nerd Font. Ligatures for code, icons for Starship and eza.
 

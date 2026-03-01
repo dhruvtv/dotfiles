@@ -4,7 +4,7 @@
 # ============================================================================
 
 # Theme
-theme = light:Builtin Solarized Light,dark:Catppuccin Mocha
+theme = light:Gruvbox Light,dark:Catppuccin Mocha
 
 # Font
 font-family = MonaspiceNe Nerd Font Mono
