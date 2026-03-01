@@ -1,13 +1,13 @@
 # ============================================================================
 # Ghostty — Terminal Configuration
-# Theme: Catppuccin Mocha | Font: JetBrains Mono Nerd Font
+# Theme: Builtin Solarized Light / Catppuccin Mocha | Font: MonaspiceNe Nerd Font Mono
 # ============================================================================
 
 # Theme
-theme = catppuccin-mocha
+theme = light:Builtin Solarized Light,dark:Catppuccin Mocha
 
 # Font
-font-family = JetBrainsMono Nerd Font
+font-family = MonaspiceNe Nerd Font Mono
 font-size = 14
 
 # Window
